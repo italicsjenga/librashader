@@ -27,6 +27,12 @@ use num_traits::AsPrimitive;
 use std::convert::Infallible;
 use std::str::FromStr;
 
+#[derive(Debug, Clone)]
+pub enum ShaderStorage {
+    Path(std::path::PathBuf),
+    String(String),
+}
+
 #[repr(u32)]
 #[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash)]
 /// Supported image formats for textures.

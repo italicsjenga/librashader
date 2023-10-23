@@ -17,7 +17,6 @@ use crate::include::read_source;
 pub use error::*;
 use librashader_common::ImageFormat;
 use rustc_hash::FxHashMap;
-use std::path::Path;
 
 /// The source file for a single shader pass.
 #[derive(Debug, Clone, PartialEq)]
@@ -58,8 +57,8 @@ pub struct ShaderParameter {
 impl ShaderSource {
     /// Load the source file at the given path, resolving includes relative to the location of the
     /// source file.
-    pub fn load(path: impl AsRef<Path>) -> Result<ShaderSource, PreprocessError> {
-        load_shader_source(path)
+    pub fn load(file: &librashader_common::ShaderStorage) -> Result<ShaderSource, PreprocessError> {
+        load_shader_source(file)
     }
 }
 
@@ -78,8 +77,14 @@ impl SourceOutput for String {
     }
 }
 
-pub(crate) fn load_shader_source(path: impl AsRef<Path>) -> Result<ShaderSource, PreprocessError> {
-    let source = read_source(path)?;
+pub(crate) fn load_shader_source(
+    file: &librashader_common::ShaderStorage,
+) -> Result<ShaderSource, PreprocessError> {
+    let source = match file {
+        librashader_common::ShaderStorage::Path(path) => read_source(path)?,
+        librashader_common::ShaderStorage::String(s) => s.to_string(),
+    };
+
     let meta = pragma::parse_pragma_meta(&source)?;
     let text = stage::process_stages(&source)?;
     let parameters = FxHashMap::from_iter(meta.parameters.into_iter().map(|p| (p.id.clone(), p)));

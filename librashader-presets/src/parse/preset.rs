@@ -114,7 +114,7 @@ pub fn resolve_values(mut values: Vec<Value>) -> ShaderPreset {
 
             let shader = ShaderPassConfig {
                 id,
-                name,
+                name: librashader_common::ShaderStorage::Path(name),
                 alias: shader_values.iter().find_map(|f| match f {
                     Value::Alias(_, value) => Some(value.to_string()),
                     _ => None,

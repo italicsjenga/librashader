@@ -10,7 +10,7 @@ pub struct ShaderPassConfig {
     /// The index of the shader pass relative to its parent preset.
     pub id: i32,
     /// The fully qualified path to the shader pass source file.
-    pub name: PathBuf,
+    pub name: librashader_common::ShaderStorage,
     /// The alias of the shader pass if available.
     pub alias: Option<String>,
     /// The filtering mode that this shader pass should expect.
